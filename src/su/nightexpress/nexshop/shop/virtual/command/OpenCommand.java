@@ -3,6 +3,7 @@ package su.nightexpress.nexshop.shop.virtual.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import su.nexmedia.engine.utils.PlayerUT;
 import su.nightexpress.nexshop.Perms;
 import su.nightexpress.nexshop.api.virtual.IShopVirtual;
 import su.nightexpress.nexshop.modules.command.ShopModuleCommand;
@@ -30,7 +31,7 @@ public class OpenCommand extends ShopModuleCommand<VirtualShop> {
 
     @Override
     public boolean playersOnly() {
-        return true;
+        return false;
     }
 
     @Override
@@ -39,28 +40,55 @@ public class OpenCommand extends ShopModuleCommand<VirtualShop> {
         if (i == 1) {
             return module.getShops(player);
         }
+        if (i == 2) {
+            return PlayerUT.getPlayerNames();
+        }
         return super.getTab(player, i, args);
     }
 
     @Override
     public void perform(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        Player player = (Player) sender;
+        // /virtualshop open
         if (args.length < 2) {
-            module.openMainMenu(player);
+            if (!(sender instanceof Player player)) {
+                this.errPlayer(sender);
+                return;
+            }
+            this.module.openMainMenu(player);
             return;
         }
 
-        IShopVirtual shopGUI = this.module.getShopById(args[1]);
-        if (shopGUI == null) {
-            plugin.lang().Virtual_Shop_Open_Error_InvalidShop.send(player);
+        IShopVirtual shopVirtual = this.module.getShopById(args[1]);
+        Player player = plugin.getServer().getPlayer(args.length >= 3 && shopVirtual != null ? args[2] : args[1]);
+
+        if (shopVirtual == null) {
+            if (player == null) {
+                if (sender instanceof Player || args.length >= 3) {
+                    plugin.lang().Virtual_Shop_Open_Error_InvalidShop.send(sender);
+                }
+                else {
+                    this.errPlayer(sender);
+                }
+                return;
+            }
+
+            this.module.openMainMenu(player);
             return;
         }
 
-        if (!sender.hasPermission(Perms.VIRTUAL_CMD_OPEN + "." + shopGUI.getId())) {
-            this.errPerm(sender);
+        if (player == null) {
+            if (!(sender instanceof  Player player1)) {
+                this.errPlayer(sender);
+                return;
+            }
+            player = player1;
+        }
+
+        if (!shopVirtual.hasPermission(player)) {
+            this.errPerm(player);
             return;
         }
 
-        shopGUI.open(player, 1);
+        shopVirtual.open(player, 1);
     }
 }

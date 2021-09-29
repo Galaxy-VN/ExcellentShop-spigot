@@ -1,8 +1,12 @@
 package su.nightexpress.nexshop.shop.chest;
 
+import org.bukkit.Chunk;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.jetbrains.annotations.NotNull;
 import su.nexmedia.engine.manager.IManager;
 import su.nexmedia.engine.manager.api.task.ITask;
@@ -42,6 +46,11 @@ public class ChestDisplayHandler extends IManager<ExcellentShop> {
         @Override
         public void action() {
             chestShop.getShops().forEach(shop -> {
+                //shop.getLocation().getChunk().setForceLoaded(false);
+                if (!shop.isDisplayHas()) {
+                    create(shop);
+                    return;
+                }
                 addHologram(shop, shop.getDisplayText().get(this.count));
                 addItem(shop);
             });
@@ -60,6 +69,7 @@ public class ChestDisplayHandler extends IManager<ExcellentShop> {
             this.slider = new Slider();
             this.slider.start();
         }
+        this.registerListeners();
     }
 
     @Override
@@ -76,6 +86,24 @@ public class ChestDisplayHandler extends IManager<ExcellentShop> {
         this.hologramIds.clear();
         this.itemIds.values().forEach(Entity::remove);
         this.itemIds.clear();
+        this.unregisterListeners();
+    }
+
+    private Chunk chunkLast;
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onChunkUnload(ChunkUnloadEvent e) {
+        Chunk chunk = e.getChunk();
+        if (chunk.equals(this.chunkLast)) return;
+
+        this.chunkLast = chunk;
+        for (IShopChest shop : chestShop.getShops()) {
+            if (!shop.isDisplayHas()) continue;
+            if (shop.getLocation().getChunk().equals(chunk)) {
+                this.remove(shop);
+            }
+        }
+        this.chunkLast = null;
     }
 
     private void addHologram(@NotNull IShopChest shop, @NotNull String name) {
@@ -115,14 +143,17 @@ public class ChestDisplayHandler extends IManager<ExcellentShop> {
     }
 
     public void create(@NotNull IShopChest chest) {
+        if (!chestShop.chestNMS.isSafeCreation(chest.getLocation())) return;
         if (!chest.getDisplayText().isEmpty()) {
             this.addHologram(chest, chest.getDisplayText().get(0));
         }
         this.addItem(chest);
+        chest.setDisplayHas(true);
     }
 
     public void remove(@NotNull IShopChest chest) {
         this.deleteHologram(chest);
         this.deleteItem(chest);
+        chest.setDisplayHas(false);
     }
 }

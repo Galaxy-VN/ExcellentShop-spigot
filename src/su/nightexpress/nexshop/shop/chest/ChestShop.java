@@ -263,6 +263,7 @@ public class ChestShop extends ShopModule {
 
         IShopChest shop = new ShopChest(this, player, bChest, UUID.randomUUID(), isAdmin);
         shop.createProduct(player, hand);
+        shop.save();
 
         this.addShop(shop);
         this.plugin.lang().Chest_Shop_Creation_Info_Done.send(player);

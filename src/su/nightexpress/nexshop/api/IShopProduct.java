@@ -151,6 +151,10 @@ public interface IShopProduct extends Cleanable, Editable {
         return !ItemUT.isAir(this.getItem());
     }
 
+    default boolean isItemMatched(@NotNull ItemStack item) {
+        return this.isItemMetaEnabled() ? this.getItem().isSimilar(item) : this.getItem().getType() == item.getType();
+    }
+
     default int getItemAmount(@NotNull Player player) {
         ItemStack item = this.getItem();
         if (ItemUT.isAir(item)) return 0;

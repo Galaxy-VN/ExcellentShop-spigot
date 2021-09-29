@@ -1,18 +1,5 @@
 package su.nightexpress.nexshop.shop.chest.object;
 
-import java.time.DayOfWeek;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.BlockState;
@@ -20,7 +7,6 @@ import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
 import su.nexmedia.engine.config.api.JYML;
 import su.nexmedia.engine.manager.LoadableItem;
 import su.nexmedia.engine.utils.ItemUT;
@@ -41,6 +27,11 @@ import su.nightexpress.nexshop.shop.chest.ChestShop;
 import su.nightexpress.nexshop.shop.chest.ChestShopConfig;
 import su.nightexpress.nexshop.shop.chest.editor.object.EditorShopChest;
 
+import java.time.DayOfWeek;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
+
 public class ShopChest extends LoadableItem implements IShopChest {
 
     private final ExcellentShop plugin;
@@ -59,6 +50,7 @@ public class ShopChest extends LoadableItem implements IShopChest {
     private Chest           chest;
     private EditorShopChest editor;
 
+    private boolean displayHas;
     private List<String> displayText;
     private Location     displayHologramLoc;
     private Location     displayItemLoc;
@@ -356,6 +348,16 @@ public class ShopChest extends LoadableItem implements IShopChest {
     @NotNull
     public Map<String, IShopChestProduct> getProductMap() {
         return this.products;
+    }
+
+    @Override
+    public boolean isDisplayHas() {
+        return this.displayHas;
+    }
+
+    @Override
+    public void setDisplayHas(boolean displayHas) {
+        this.displayHas = displayHas;
     }
 
     @Override

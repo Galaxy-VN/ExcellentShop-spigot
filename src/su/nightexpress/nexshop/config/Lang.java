@@ -66,7 +66,7 @@ public class Lang extends CoreLang {
     public ILangMsg Auction_Error_DisabledWorld = new ILangMsg(this, "&cAuction is disabled in this world!");
 
     public ILangMsg Virtual_Shop_Command_Open_Desc  = new ILangMsg(this, "Opens specified shop.");
-    public ILangMsg Virtual_Shop_Command_Open_Usage = new ILangMsg(this, "[shop]");
+    public ILangMsg Virtual_Shop_Command_Open_Usage = new ILangMsg(this, "[shop] [player]");
 
     public ILangMsg Virtual_Shop_MainMenu_Error_Disabled = new ILangMsg(this, "&cMain shop menu is disabled!");
     public ILangMsg Virtual_Shop_Open_Error_BadWorld     = new ILangMsg(this, "&cShop is disabled in this world!");

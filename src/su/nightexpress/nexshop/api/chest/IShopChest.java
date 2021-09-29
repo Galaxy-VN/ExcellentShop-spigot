@@ -102,6 +102,10 @@ public interface IShopChest extends IShop, Cleanable {
 
     void setAdminShop(boolean isAdminShop);
 
+    boolean isDisplayHas();
+
+    void setDisplayHas(boolean displayHas);
+
     void updateDisplayText();
 
     @NotNull

@@ -13,6 +13,7 @@ import su.nightexpress.nexshop.data.ShopDataHandler;
 import su.nightexpress.nexshop.data.UserManager;
 import su.nightexpress.nexshop.data.object.ShopUser;
 import su.nightexpress.nexshop.hooks.EHook;
+import su.nightexpress.nexshop.hooks.external.BrokerHook;
 import su.nightexpress.nexshop.hooks.external.GamePointsHK;
 import su.nightexpress.nexshop.hooks.external.MySQLTokensHK;
 import su.nightexpress.nexshop.hooks.external.PlayerPointsHK;
@@ -115,6 +116,7 @@ public class ExcellentShop extends NexDataPlugin<ExcellentShop, ShopUser> {
         this.registerHook(EHook.MYSQL_TOKENS, MySQLTokensHK.class);
         this.registerHook(EHook.PLAYER_POINTS, PlayerPointsHK.class);
         this.registerHook(EHook.GAME_POINTS, GamePointsHK.class);
+        this.registerHook(EHook.BROKER, BrokerHook.class);
     }
 
     @Override

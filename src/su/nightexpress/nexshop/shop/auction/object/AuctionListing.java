@@ -29,7 +29,7 @@ public class AuctionListing extends AuctionItem {
                 itemStack,
                 price,
                 System.currentTimeMillis() + AuctionConfig.STORAGE_EXPIRE_IN,
-                System.currentTimeMillis() + AuctionConfig.STORAGE_SALES_HISTORY
+                System.currentTimeMillis() + AuctionConfig.STORAGE_EXPIRE_IN + AuctionConfig.STORAGE_DELETE_EXPIRED
         );
     }
 
