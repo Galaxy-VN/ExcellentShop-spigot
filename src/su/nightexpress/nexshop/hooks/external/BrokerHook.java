@@ -136,7 +136,7 @@ public class BrokerHook extends NHook<ExcellentShop> {
             Optional<BigDecimal> value = getBuyPrice(playerId, worldId, itemStack, amount);
             if (player == null || value.isEmpty()) return builder.buildFailure(NO_PRODUCT);
 
-            IShopProduct product = this.getBestProduct(player, TradeType.SELL, itemStack, amount);
+            IShopProduct product = this.getBestProduct(player, TradeType.BUY, itemStack, amount);
             if (product == null) return builder.buildFailure(NO_PRODUCT);
 
             IProductPrepared prepared = product.getPrepared(TradeType.BUY);
@@ -151,7 +151,7 @@ public class BrokerHook extends NHook<ExcellentShop> {
             if (!canBeBought(playerId, worldId, itemStack)) return builder.buildFailure(NO_PRODUCT);
 
             Player player = playerId.isEmpty() ? null : plugin.getServer().getPlayer(playerId.get());
-            Optional<BigDecimal> value = getBuyPrice(playerId, worldId, itemStack, amount);
+            Optional<BigDecimal> value = getSellPrice(playerId, worldId, itemStack, amount);
             if (player == null || value.isEmpty()) return builder.buildFailure(NO_PRODUCT);
 
             IShopProduct product = this.getBestProduct(player, TradeType.SELL, itemStack, amount);
