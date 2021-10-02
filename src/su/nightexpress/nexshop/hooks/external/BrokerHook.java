@@ -18,10 +18,7 @@ import su.nightexpress.nexshop.api.type.TradeType;
 import su.nightexpress.nexshop.shop.virtual.VirtualShop;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class BrokerHook extends NHook<ExcellentShop> {
 
@@ -94,9 +91,11 @@ public class BrokerHook extends NHook<ExcellentShop> {
                 }).toList());
             });
 
-            return products.stream().min((p1, p2) -> {
+            Comparator<IShopProduct> comp = (p1, p2) -> {
                 return (int) (p1.getPricer().getPrice(tradeType, true) - p2.getPricer().getPrice(tradeType, true));
-            }).orElse(null);
+            };
+
+            return (tradeType == TradeType.BUY ? products.stream().min(comp) : products.stream().max(comp)).orElse(null);
         }
 
         @Override
@@ -148,7 +147,7 @@ public class BrokerHook extends NHook<ExcellentShop> {
         @Override
         public SaleRecord<ItemStack> sell(Optional<UUID> playerId, Optional<UUID> worldId, ItemStack itemStack, int amount) {
             SaleRecord.SaleRecordBuilder<ItemStack> builder = SaleRecord.start(this, itemStack, playerId, worldId).setVolume(amount);
-            if (!canBeBought(playerId, worldId, itemStack)) return builder.buildFailure(NO_PRODUCT);
+            if (!canBeSold(playerId, worldId, itemStack)) return builder.buildFailure(NO_PRODUCT);
 
             Player player = playerId.isEmpty() ? null : plugin.getServer().getPlayer(playerId.get());
             Optional<BigDecimal> value = getSellPrice(playerId, worldId, itemStack, amount);
